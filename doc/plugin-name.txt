@@ -1,0 +1,13 @@
+*omar_plugin.txt*   Omar Plugin
+
+INTRODUCCIÓN
+    Este plugin de ejemplo muestra cómo organizar
+    carpetas y archivos en Neovim.
+
+COMANDOS
+    :Hola
+        Muestra un saludo en la línea de comandos.
+
+KEYMAPS
+    <leader>hp
+        Imprime un mensaje del plugin.

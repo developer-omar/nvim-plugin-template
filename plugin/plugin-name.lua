@@ -1,0 +1,3 @@
+-- plugin/omar_plugin.lua
+-- Bootstrap: se ejecuta al inicio
+-- vim.api.nvim_echo({ { "[angular-tools] cargado automáticamente", "Normal" } }, false, {})
