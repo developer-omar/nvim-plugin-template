@@ -92,3 +92,29 @@ fi
 print_message "$BLUE" "Updating file contents..."
 
 # Update README.md
+if [ -f "README.md" ]; then
+  sed -i "s/plugin-name/$PLUGIN_NAME/g" README_PLUGIN.md
+  sed -i "s/username/$GITHUB_USERNAME/g" README_PLUGIN.md
+  sed -i "s/plugin-description/$PLUGIN_DESC/g" README_PLUGIN.md
+  cp README.md README_TEMPLATE.md
+  mv README_PLUGIN README.md
+  print_message "$GREEN" "✓ Updated README.md"
+fi
+
+# Update lua files
+if [ -f "lua/$PLUGIN_NAME/init.lua" ]; then
+  sed -i "s/nvim-plugin-template/$PLUGIN_NAME/g" "lua/$PLUGIN_NAME/init.lua"
+  print_message "$GREEN" "✓ Updated init.lua"
+fi
+
+# Initialize git repository if needed
+# if [ ! -d ".git" ]; then
+#   print_message "$BLUE" "Initializing git repository..."
+#   git init
+#   git add .
+#   git commit -m "Initial commit: Set up $PLUGIN_NAME from template"
+#   print_message "$GREEN" "✓ Git repository initialized"
+# fi
+
+print_message "$GREEN" "Setup complete! 🎉"
+print_message "$BLUE" "Happy coding! 💻"

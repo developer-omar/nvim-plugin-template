@@ -1,8 +1,8 @@
-# Plugin Name
+# plugin-name
 
 ## Overview
 
-Plugin Description
+plugin-description
 
 ## Requirements
 
