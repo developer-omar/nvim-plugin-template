@@ -100,6 +100,9 @@ fi
 
 # Update License file
 LICENSE_SELECTED="${LICENSE_SELECTED// /_}.txt"
+if [ -f "LICENSE" ]; then
+  rm LICENSE
+fi
 cp licenses/$LICENSE_SELECTED LICENSE
 rm -rf licenses
 
