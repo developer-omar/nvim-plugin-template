@@ -41,11 +41,21 @@ if [ -z "$GITHUB_USERNAME" ]; then
 fi
 
 # Get full name for license
-read -p "Enter your full name for license: " FULL_NAME
-if [ -z "$FULL_NAME" ]; then
-  print_message "$YELLOW" "Warning: Using 'Full Name' as placeholder"
-  FULL_NAME="Full Name"
-fi
+echo "Select a license for your project:"
+options=("GNU GPLv3" "MIT License" "Apache License 2.0" "Mozilla Public License 2.0")
+PS3="Select a number: "
+
+select LICENSE_SELECTED in "${options[@]}"; do
+  # Validate that $REPLY is a positive integer
+  if [[ ! $REPLY =~ ^[0-9]+$ ]]; then
+    echo "Invalid input: Numbers only, please."
+  elif [ -n "$LICENSE_SELECTED" ]; then
+    echo "You selected: $LICENSE_SELECTED(Option $REPLY)"
+    break
+  else
+    echo "Invalid option: $REPLY is out of range."
+  fi
+done
 
 # Get minimum Neovim version
 read -p "Enter minimum Neovim version (default: 0.11.0): " NEOVIM_VERSION
@@ -61,7 +71,7 @@ print_message "$GREEN" "Setting up plugin with the following configuration:"
 echo "  Plugin name: $PLUGIN_NAME"
 echo "  Description: $PLUGIN_DESC"
 echo "  GitHub: $GITHUB_USERNAME/$PLUGIN_NAME"
-echo "  Full name: $FULL_NAME"
+echo "  License Selected: $LICENSE_SELECTED"
 echo "  Min Neovim: $NEOVIM_VERSION"
 echo
 
@@ -88,16 +98,22 @@ if [ -d "doc" ] && [ -f "doc/plugin-name.txt" ]; then
   print_message "$GREEN" "✓ Updated doc directory"
 fi
 
+# Update License file
+LICENSE_SELECTED="${LICENSE_SELECTED// /_}.txt"
+cp licenses/$LICENSE_SELECTED LICENSE
+rm -rf licenses
+
 # Replace placeholders in files
 print_message "$BLUE" "Updating file contents..."
 
 # Update README.md
 if [ -f "README.md" ]; then
   sed -i "s/plugin-name/$PLUGIN_NAME/g" README_PLUGIN.md
-  sed -i "s/username/$GITHUB_USERNAME/g" README_PLUGIN.md
   sed -i "s/plugin-description/$PLUGIN_DESC/g" README_PLUGIN.md
+  sed -i "s/nvim-version/$NEOVIM_VERSION/g" README_PLUGIN.md
+  sed -i "s/username/$GITHUB_USERNAME/g" README_PLUGIN.md
   cp README.md README_TEMPLATE.md
-  mv README_PLUGIN README.md
+  mv README_PLUGIN.md README.md
   print_message "$GREEN" "✓ Updated README.md"
 fi
 
@@ -107,14 +123,15 @@ if [ -f "lua/$PLUGIN_NAME/init.lua" ]; then
   print_message "$GREEN" "✓ Updated init.lua"
 fi
 
-# Initialize git repository if needed
-# if [ ! -d ".git" ]; then
-#   print_message "$BLUE" "Initializing git repository..."
-#   git init
-#   git add .
-#   git commit -m "Initial commit: Set up $PLUGIN_NAME from template"
-#   print_message "$GREEN" "✓ Git repository initialized"
-# fi
+# Initialize git repository
+rm -rf .git
+if [ ! -d ".git" ]; then
+  print_message "$BLUE" "Initializing git repository..."
+  git init
+  git add .
+  git commit -m "Initial commit: Set up $PLUGIN_NAME from template"
+  print_message "$GREEN" "✓ Git repository initialized"
+fi
 
 print_message "$GREEN" "Setup complete! 🎉"
 print_message "$BLUE" "Happy coding! 💻"

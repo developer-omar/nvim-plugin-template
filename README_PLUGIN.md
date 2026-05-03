@@ -6,7 +6,7 @@ plugin-description
 
 ## Requirements
 
-- Neovim >= 0.8.0
+- Neovim >= nvim-version
 
 ## Installation
 
